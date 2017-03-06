@@ -56,7 +56,6 @@ export default function FirebaseProviderFactory (options = { payload: {} }) {
         set,
         remove,
         transaction,
-        task: createTask(options),
         createUserWithEmailAndPassword,
         signInWithEmailAndPassword,
         signOut: signOutService,
@@ -66,6 +65,8 @@ export default function FirebaseProviderFactory (options = { payload: {} }) {
         cancelOnDisconnect
       }
     }
+
+    context.firebase.task = createTask(options, context.execution)
 
     if (context.debugger) {
       context.debugger.wrapProvider('firebase')

@@ -102,7 +102,7 @@ class Devtools {
     }
   }
   watchExecution (tree) {
-    tree.on('start', (execution) => {
+    tree.on('start', (execution, payload) => {
       const message = JSON.stringify({
         type: 'executionStart',
         data: {
@@ -110,7 +110,8 @@ class Devtools {
             executionId: execution.id,
             name: execution.name,
             staticTree: execution.staticTree,
-            datetime: execution.datetime
+            datetime: execution.datetime,
+            executedBy: payload._execution ? payload._execution : null
           }
         }
       })

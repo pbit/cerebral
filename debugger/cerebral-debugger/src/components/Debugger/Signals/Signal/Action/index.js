@@ -42,7 +42,7 @@ function renderCode (error) {
   return error.func.split('\n').map((line) => line.replace(/\t/, '')).join('\n')
 }
 
-function Action ({action, faded, execution, children, onMutationClick, onActionClick}) {
+function Action ({action, faded, execution, children, onMutationClick, onActionClick, executed}) {
   const error = execution && execution.error
   const titleClassname = classnames({
     'action-actionError': error,
@@ -79,6 +79,7 @@ function Action ({action, faded, execution, children, onMutationClick, onActionC
             <div className='action-services'>
               {execution.data.filter(data => data.type !== 'mutation').map((service, index) => <Service service={service} key={index} />)}
             </div>
+            {executed}
             {execution.output ? (
               <div className='action-actionInput'>
                 <div className='action-inputLabel'>output:</div>

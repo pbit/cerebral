@@ -12,7 +12,7 @@ import escPressed from './signals/escPressed'
 export default {
   state: {
     settings: {},
-    initialModel: {},
+    initialModel: null,
     executingSignalsCount: 0,
     model: {},
     currentPage: 'signals',
@@ -20,6 +20,7 @@ export default {
     currentSignalExecutionId: null,
     currentRememberedMutationIndex: 0,
     signals: {},
+    executedBySignals: {},
     mutations: [],
     expandedSignalGroups: [],
     currentMutationPath: null,
