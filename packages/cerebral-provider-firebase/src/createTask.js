@@ -1,6 +1,6 @@
 import firebase from 'firebase'
 
-export default function createTask (options, execution) {
+export default function createTask (options, executionId, functionIndex) {
   return (name, payload = {}) => {
     return new Promise((resolve, reject) => {
       const tasksPath = options.queuePath ? options.queuePath + '/tasks' : 'queue/tasks'
@@ -12,8 +12,8 @@ export default function createTask (options, execution) {
             _state: options.specPrefix ? `${options.specPrefix}_${name}` : name,
             _token,
             _execution: {
-              id: execution.id,
-              functionIndex: execution.functionIndex
+              id: executionId,
+              functionIndex: functionIndex
             }
           }, payload))
 

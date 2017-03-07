@@ -6,8 +6,8 @@ import {state, signal} from 'cerebral/tags'
 import signalsList from '../../../common/computed/signalsList'
 
 export default connect({
+  type: state`type`,
   currentPage: state`debugger.currentPage`,
-  initialModel: state`debugger.initialModel`,
   executingSignalsCount: state`debugger.executingSignalsCount`,
   searchValue: state`debugger.searchValue`,
   isSmall: state`useragent.media.small`,
@@ -30,10 +30,10 @@ export default connect({
               <li
                 className={classNames('toolbar-tab', {'toolbar-tab--active': this.props.currentPage === 'signals' || !this.props.isSmall && this.props.currentPage === 'model'})}
                 onClick={() => this.props.pageChanged({page: 'signals'})}>
-                <i className='icon icon-signals' /> EXECUTION
+                <i className='icon icon-signals' /> {this.props.type === 'c' || this.props.type === 'cft' ? 'SIGNALS' : 'EXECUTION'}
               </li>
               {
-                this.props.initialModel ? [
+                this.props.type === 'c' || this.props.type === 'cft' ? [
                   <li
                     className={classNames('toolbar-tab', {'toolbar-tab--active': this.props.currentPage === 'mutations'})}
                     onClick={() => this.props.pageChanged({page: 'mutations'})}>

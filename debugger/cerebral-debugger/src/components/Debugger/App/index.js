@@ -1,21 +1,23 @@
 import './styles.css'
-import Inferno from 'inferno'
+import Inferno from 'inferno' // eslint-disable-line
+import connector from 'connector'
 import {connect} from 'cerebral/inferno'
 import {state, signal} from 'cerebral/tags'
-import Toolbar from './Toolbar'
-import Signals from './Signals'
-import Mutations from './Mutations'
-import Components from './Components'
-import Model from './Model'
+import Toolbar from '../Toolbar'
+import Signals from '../Signals'
+import Mutations from '../Mutations'
+import Components from '../Components'
+import Model from '../Model'
 
 export default connect({
-  initialModel: state`debugger.initialModel`,
+  port: state`port`,
+  type: state`type`,
   currentPage: state`debugger.currentPage`,
   settings: state`debugger.settings`,
   isSmall: state`useragent.media.small`,
   mutationsError: state`debugger.mutationsError`,
-  isCatchingUp: state`debugger.isCatchingUp`,
-  escPressed: signal`debugger.escPressed`
+  escPressed: signal`debugger.escPressed`,
+  payloadReceived: signal`debugger.payloadReceived`
 },
   class App extends Inferno.Component {
     componentDidMount () {
@@ -23,6 +25,10 @@ export default connect({
         if (event.keyCode === 27) {
           this.props.escPressed()
         }
+      })
+
+      connector.addPort(this.props.port, (payload) => {
+        this.props.payloadReceived(payload)
       })
     }
     renderLayout () {
@@ -61,7 +67,7 @@ export default connect({
             return (
               <div className='app-content'>
                 <Signals />
-                {this.props.initialModel ? <Model /> : null}
+                {this.props.type === 'c' || this.props.type === 'cft' ? <Model /> : null}
               </div>
             )
           case 'components':
@@ -74,14 +80,14 @@ export default connect({
             return (
               <div className='app-content'>
                 <Mutations />
-                {this.props.initialModel ? <Model /> : null}
+                {this.props.type === 'c' || this.props.type === 'cft' ? <Model /> : null}
               </div>
             )
           case 'model':
             return (
               <div className='app-content'>
                 <Signals />
-                {this.props.initialModel ? <Model /> : null}
+                {this.props.type === 'c' || this.props.type === 'cft' ? <Model /> : null}
               </div>
             )
           default:
@@ -90,35 +96,6 @@ export default connect({
       }
     }
     render () {
-      if (this.props.isCatchingUp) {
-        return (
-          <div className='debugger'>
-            <div className='app-toolbar'>
-              <Toolbar />
-            </div>
-            <div className='app-disabled'>
-              <img src='logo.png' width='200' role='presentation' />
-              <h1>Loading...</h1>
-              <h3>Catching up with app state</h3>
-            </div>
-          </div>
-        )
-      }
-
-      if (this.props.settings.disableDebugger) {
-        return (
-          <div className='debugger'>
-            <div className='app-toolbar'>
-              <Toolbar />
-            </div>
-            <div className='app-disabled'>
-              <img src='logo.png' width='200' role='presentation' />
-              <h1>Disabled</h1>
-              <h3>Enable debugger and refresh</h3>
-            </div>
-          </div>
-        )
-      }
       const mutationsError = this.props.mutationsError
 
       return (
